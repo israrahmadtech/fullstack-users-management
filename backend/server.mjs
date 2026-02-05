@@ -1,8 +1,10 @@
 import express from "express"
-import { authRouter } from "./routes/route.mjs"
+import { authRouter } from "./routes/auth.route.mjs"
 import dotenv from "dotenv"
 import connectDB from "./config/db.mjs"
 import cors from "cors";
+import { usersRoute } from "./routes/users.route.mjs";
+import { authMiddleware } from "./middlewares/auth.middleware.mjs";
 
 // env
 dotenv.config()
@@ -22,6 +24,8 @@ app.use(cors({
 app.use(express.json())
 
 app.use('/api/v1/auth', authRouter)
+
+app.use('/api/v1/users', authMiddleware, usersRoute)
 
 app.listen(PORT, () => {
     console.log("Server is up");

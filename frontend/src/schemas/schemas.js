@@ -41,3 +41,11 @@ export const loginSchema = object({
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
 });
+
+export const updateUserSchema = object(
+    {
+        name: string().required("Name is required").min(3, "Minimum 3 characters").max(50, "Name too long"),
+        email: string().trim().lowercase().email("Invalid email address").required("Email is required"),
+        username: string().trim().lowercase().nullable(),
+    }
+)

@@ -1,5 +1,5 @@
 import { FiMail, FiLock } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../../schemas/schemas";
@@ -7,20 +7,21 @@ import { loginSchema } from "../../schemas/schemas";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 function Login() {
+    const navigate = useNavigate()
     const { register, handleSubmit, isSubmitting, formState: { errors } } = useForm({ resolver: yupResolver(loginSchema) })
 
     async function onSubmit(data) {
-        console.log("Form submitted:", data);
         try {
-            const res = await fetch(BACKEND_URL + "api/v1/auth/login", {
+            const res = await fetch(BACKEND_URL + "/api/v1/auth/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                data
+                body: JSON.stringify(data)
             })
-            const result = res.json()
-            console.log(result);
-            
-        } catch (error) {
+            const result = await res.json()
+            localStorage.setItem("token", result?.token)
+            navigate('/users')
+        }
+        catch (error) {
             console.log(error);
         }
     }

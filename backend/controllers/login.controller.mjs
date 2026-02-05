@@ -1,7 +1,8 @@
 import User from "../models/User.mjs"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET || "IsrarAhmadKhanHazratLare"
 
 export async function loginUser(req, res) {
     try {
@@ -13,7 +14,7 @@ export async function loginUser(req, res) {
         if (!password) return res.status(400).json({ isSuccess: false, message: "Password is required" })
 
         // User exists or not
-        const user = User.findOne({
+        const user = await User.findOne({
             $or: [{ email: identifier }, { username: identifier }],
         })
         if (!user) return res.status(404).json({ isSuccess: false, message: "User not found" })
@@ -22,20 +23,16 @@ export async function loginUser(req, res) {
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(401).json({ isSuccess: false, message: "Invalid credentials" })
 
+        const payload = { id: user._id, name: user.name, email: user.email, username: user.username }
         // Create jwt token
         const token = jwt.sign(
-            { id: user._id, email: user.email, username: user.username }, JWT_SECRET, { expiresIn: "7d" }
+            payload, JWT_SECRET, { expiresIn: "7d" }
         )
 
         // Response
         res.status(200).json({
             isSuccess: true, message: "Login Successfully", token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                username: user.username
-            }
+            user: payload
         })
     }
     catch (error) {

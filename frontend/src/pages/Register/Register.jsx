@@ -12,19 +12,16 @@ function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) })
 
     async function onSubmit(data) {
-        console.log("Form submitted:", data);
-
         try {
             const { confirmPassword, ...newUser } = data
 
-            const res = await fetch(BACKEND_URL + "api/v1/auth/register", {
+            const res = await fetch(BACKEND_URL + "/api/v1/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser)
             })
 
             const result = await res.json()
-            console.log(result);
             navigate('/login')
         }
         catch (error) {
