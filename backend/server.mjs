@@ -16,9 +16,9 @@ const app = express()
 app.use(express.json())
 
 // cors
-const FRONTEND_URL = process.env.FRONTEND_URL || "*";
+// const FRONTEND_URL = process.env.FRONTEND_URL || "*";
 app.use(cors({
-    origin: FRONTEND_URL,
+    origin: "https://fullstack-users-management-frontend.vercel.app",
     credentials: true
 }));
 
