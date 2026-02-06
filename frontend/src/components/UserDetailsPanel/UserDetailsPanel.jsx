@@ -1,11 +1,4 @@
-import {
-    FiX,
-    FiMail,
-    FiEdit,
-    FiTrash2,
-    FiAtSign,
-    FiCalendar,
-} from "react-icons/fi";
+import { FiX, FiMail, FiEdit, FiTrash2, FiAtSign, FiCalendar, } from "react-icons/fi";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -16,7 +9,7 @@ const UserDetailsPanel = ({ user, onClose, onEdit }) => {
 
     const queryClient = useQueryClient();
 
-    let token = localStorage.getItem("token");
+    let token = JSON.parse(localStorage.getItem("token"))
 
     const joinedDate = user?.createdAt
         ? new Date(user.createdAt).toLocaleString()

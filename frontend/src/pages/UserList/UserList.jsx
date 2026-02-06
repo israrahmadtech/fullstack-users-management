@@ -5,17 +5,19 @@ import UserCard from "../../components/UserCard/UserCard";
 import FormModal from "../../components/FormModal/FormModal";
 import UserDetailsPanel from "../../components/UserDetailsPanel/UserDetailsPanel";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "../../../services/users.services";
+import { fetchUsers, logout } from "../../../services/users.services";
+import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
-    let token = localStorage.getItem("token");
+    const navigate = useNavigate()
+    let token = JSON.parse(localStorage.getItem("token"));
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editUser, setEditUser] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const [search, setSearch] = useState("");
 
-    // ✅ Fetch Users Query
+    // Fetch Users Query
     const { data, isLoading, error } = useQuery({
         queryKey: ["users"],
         queryFn: () => fetchUsers(token),
@@ -25,32 +27,21 @@ const UserList = () => {
     const users = data?.users || [];
     const totalUsers = users.length;
 
-    // ✅ Filter Users
+    // Filter Users
     const filteredUsers = useMemo(() => {
         return users.filter((user) =>
             `${user.name} ${user.email}`.toLowerCase().includes(search.toLowerCase())
         );
     }, [users, search]);
 
-    if (!token) {
-        return (
-            <p className="text-center py-10 text-red-500">
-                Token not found. Please login again.
-            </p>
-        );
-    }
+    // if no token error
+    if (!token) return <p className="text-center py-10 text-red-500">Token not found. Please login again.</p>
 
-    if (isLoading) {
-        return <p className="text-center py-10">Loading...</p>;
-    }
+    // loading
+    if (isLoading) return <p className="text-center py-10">Loading...</p>
 
-    if (error) {
-        return (
-            <p className="text-center py-10 text-red-500">
-                {error.message}
-            </p>
-        );
-    }
+    // error
+    if (error) return <p className="text-center py-10 text-red-500">{error.message}</p>
 
     return (
         <div className="container mx-auto px-4 py-8 space-y-8">
@@ -66,8 +57,15 @@ const UserList = () => {
                 </h2>
 
                 {/* Search */}
-                <div className="flex items-center gap-3 flex-wrap max-w-lg w-full">
+                <div className="flex items-center gap-3 max-w-xl w-full">
                     <SearchBar value={search} onChange={setSearch} />
+
+                    <button
+                        className="cursor-pointer flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-lg font-medium transition-all shadow-sm hover:shadow-md active:scale-95"
+                        onClick={() => { logout(); navigate("/login", { replace: true }); }}
+                    >
+                        Logout
+                    </button>
                 </div>
             </div>
 
@@ -87,7 +85,7 @@ const UserList = () => {
                     {filteredUsers.map((user) => (
                         <UserCard
                             key={"user-" + user._id}
-                            onClick={() => setSelectedUser({ ...user })}
+                            onClick={() => setSelectedUser(user)}
                             setIsModalOpen={setIsModalOpen}
                             setEditUser={setEditUser}
                             user={user}

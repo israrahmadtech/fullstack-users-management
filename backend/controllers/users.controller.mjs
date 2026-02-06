@@ -117,7 +117,6 @@ export async function updateUser(req, res) {
             updatedUser,
         });
     } catch (error) {
-        console.log("Update User Error:", error);
         return res
             .status(500)
             .json({ isSuccess: false, message: "Internal server error" });
@@ -155,8 +154,6 @@ export async function deleteUser(req, res) {
             message: "User deleted successfully",
         });
     } catch (error) {
-        console.log("DELETE USER ERROR:", error);
-
         return res.status(500).json({
             isSuccess: false,
             message: "Internal server error",

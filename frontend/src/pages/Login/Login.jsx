@@ -3,27 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../../schemas/schemas";
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+import toast from "react-hot-toast";
+import { loginUser } from "../../../services/users.services";
 
 function Login() {
     const navigate = useNavigate()
     const { register, handleSubmit, isSubmitting, formState: { errors } } = useForm({ resolver: yupResolver(loginSchema) })
 
     async function onSubmit(data) {
-        try {
-            const res = await fetch(BACKEND_URL + "/api/v1/auth/login", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(data)
-            })
-            const result = await res.json()
-            localStorage.setItem("token", result?.token)
-            navigate('/users')
+        const result = await loginUser(data);
+
+        if (result.isSuccess) {
+            toast.success(result.message);
+
+            localStorage.setItem("token", JSON.stringify(result.token));
+            navigate("/users");
         }
-        catch (error) {
-            console.log(error);
-        }
+        else toast.error(result.message);
     }
 
     return (
@@ -61,7 +57,7 @@ function Login() {
                 <p className="text-sm text-gray-500 text-center mt-4">
                     Don&apos;t have an account?{" "}
                     <span className="text-orange-500 cursor-pointer hover:underline">
-                        <Link to="/">Register</Link>
+                        <Link to="/register">Register</Link>
                     </span>
                 </p>
             </div>

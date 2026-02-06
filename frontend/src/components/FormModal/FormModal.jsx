@@ -10,7 +10,7 @@ import { updateUser } from "../../../services/users.services";
 function FormModal({ isOpen, onClose, initialData }) {
     const queryClient = useQueryClient();
 
-    let token = localStorage.getItem("token");
+    let token = JSON.parse(localStorage.getItem("token"))
 
     const {
         register,
@@ -52,8 +52,6 @@ function FormModal({ isOpen, onClose, initialData }) {
 
     // Submit Handler (inside modal)
     const submitHandler = (data) => {
-        console.log(data);
-
         if (!initialData?._id) {
             toast.error("User ID not found!");
             return;

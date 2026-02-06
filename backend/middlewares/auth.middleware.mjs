@@ -1,21 +1,18 @@
 import jwt from "jsonwebtoken"
-const JWT_SECRET = process.env.JWT_SECRET || "IsrarAhmadKhanHazratLare"
 
 export async function authMiddleware(req, res, next) {
     try {
+        const JWT_SECRET = process.env.JWT_SECRET
+
         const authHeader = req.headers.authorization
-        console.log(authHeader);
-        
 
         // check token exists
-        if(!authHeader || !authHeader.startsWith("Bearer ")){
-            return res.status(401).json({isSuccess: false, message: "Token missing"})
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ isSuccess: false, message: "Token missing" })
         }
 
         // extract token
         const token = authHeader.split(" ")[1]
-        console.log(token);
-        
 
         // verify token
         const decodedToken = jwt.verify(token, JWT_SECRET)
@@ -24,6 +21,6 @@ export async function authMiddleware(req, res, next) {
         next()
     }
     catch (error) {
-        res.status(401).json({isSuccess: false, message: "Invalid or expired token"})    
+        res.status(401).json({ isSuccess: false, message: "Invalid or expired token" })
     }
 }

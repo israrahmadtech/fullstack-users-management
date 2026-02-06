@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { registerSchema } from "../../schemas/schemas";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+import toast from "react-hot-toast";
+import { registerUser } from "../../../services/users.services";
 
 function Register() {
     const navigate = useNavigate()
@@ -12,20 +12,13 @@ function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) })
 
     async function onSubmit(data) {
-        try {
-            const { confirmPassword, ...newUser } = data
+        const result = await registerUser(data);
 
-            const res = await fetch(BACKEND_URL + "/api/v1/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newUser)
-            })
-
-            const result = await res.json()
-            navigate('/login')
-        }
-        catch (error) {
-            console.log(error);
+        if (result.isSuccess) {
+            toast.success(result.message);
+            navigate("/login");
+        } else {
+            toast.error(result.message);
         }
     }
 

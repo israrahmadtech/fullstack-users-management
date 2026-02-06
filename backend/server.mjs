@@ -12,21 +12,23 @@ dotenv.config()
 connectDB()
 
 const app = express()
-const PORT = process.env.PORT
+
+app.use(express.json())
 
 // cors
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL || "*";
 app.use(cors({
     origin: FRONTEND_URL,
     credentials: true
 }));
 
-app.use(express.json())
-
+// routes
 app.use('/api/v1/auth', authRouter)
-
 app.use('/api/v1/users', authMiddleware, usersRoute)
 
-app.listen(PORT, () => {
-    console.log("Server is up");
-})
+// test route
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running on Vercel 🚀" });
+});
+
+export default app

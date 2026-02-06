@@ -2,13 +2,13 @@ import User from "../models/User.mjs"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-const JWT_SECRET = process.env.JWT_SECRET || "IsrarAhmadKhanHazratLare"
 
 export async function loginUser(req, res) {
     try {
-        const { identifier, password } = req.body
-        console.log(identifier, password);
+        const JWT_SECRET = process.env.JWT_SECRET
         
+        const { identifier, password } = req.body
+
         // validate data
         if (!identifier) return res.status(400).json({ isSuccess: false, message: "Email or username is required" })
         if (!password) return res.status(400).json({ isSuccess: false, message: "Password is required" })
@@ -36,8 +36,6 @@ export async function loginUser(req, res) {
         })
     }
     catch (error) {
-        console.log(error.message);
-        
         res.status(500).json({isSuccess: false, message: "Internal server error"})
     }
 }

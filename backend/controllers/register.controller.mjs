@@ -18,7 +18,6 @@ export async function createUser(req, res) {
 
         // Hash password
         const hashedPass = await bcrypt.hash(password, 10)
-        console.log(hashedPass);
 
         // validate new user using User schema and create user in mongo db
         const user = await User.create({ name, email, username, password: hashedPass })
