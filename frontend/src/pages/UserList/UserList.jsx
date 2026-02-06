@@ -112,6 +112,9 @@ const UserList = () => {
                     setEditUser(null);
                 }}
                 initialData={editUser}
+                onUpdated={(updatedUser) => {
+                    setSelectedUser(updatedUser);   // 👈 user details panel update
+                }}
             />
         </div>
     );

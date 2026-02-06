@@ -35,25 +35,25 @@ function Register() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                     {/* Name */}
-                    <Input {...register("name")} icon={<FiUser />} placeholder="Full Name" type="text" />
+                    <Input {...register("name")} icon={<FiUser />} placeholder="Full Name" />
                     {errors.name && (
                         <p className="text-red-500 text-sm -mt-3">{errors.name.message}</p>
                     )}
 
                     {/* Email */}
-                    <Input {...register("email")} icon={<FiMail />} placeholder="Email Address" type="email" />
+                    <Input {...register("email")} icon={<FiMail />} placeholder="Email Address" />
                     {errors.email && (
                         <p className="text-red-500 text-sm -mt-3">{errors.email.message}</p>
                     )}
 
                     {/* Username */}
-                    <Input {...register("username")} icon={<FiMail />} placeholder="Username" type="username" />
+                    <Input {...register("username")} icon={<FiMail />} placeholder="Username" />
                     {errors.username && (
                         <p className="text-red-500 text-sm -mt-3">{errors.username.message}</p>
                     )}
 
                     {/* Password */}
-                    <Input {...register("password")} icon={<FiLock />} placeholder="Password" type="password" />
+                    <Input {...register("password")} icon={<FiLock />} placeholder="Password" />
                     {errors.password && (
                         <p className="text-red-500 text-sm -mt-3">{errors.password.message}</p>
                     )}

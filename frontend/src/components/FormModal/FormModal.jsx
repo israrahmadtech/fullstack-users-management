@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { updateUser } from "../../../services/users.services";
 
-function FormModal({ isOpen, onClose, initialData }) {
+function FormModal({ isOpen, onClose, initialData, onUpdated }) {
     const queryClient = useQueryClient();
 
     let token = JSON.parse(localStorage.getItem("token"))
@@ -30,6 +30,9 @@ function FormModal({ isOpen, onClose, initialData }) {
             toast.success(data?.message || "User updated successfully!");
             queryClient.invalidateQueries(["users"]);
             onClose();
+            if (onUpdated) {
+                onUpdated(data?.updatedUser); // 👈 backend se updated user bhejna hoga
+            }
         },
 
         onError: (error) => {
@@ -93,7 +96,6 @@ function FormModal({ isOpen, onClose, initialData }) {
                         {...register("name")}
                         icon={<FiUser />}
                         placeholder="Full Name"
-                        type="text"
                     />
                     {errors.name && (
                         <p className="text-red-500 text-sm -mt-3">
@@ -106,7 +108,6 @@ function FormModal({ isOpen, onClose, initialData }) {
                         {...register("email")}
                         icon={<FiMail />}
                         placeholder="Email Address"
-                        type="email"
                     />
                     {errors.email && (
                         <p className="text-red-500 text-sm -mt-3">
@@ -119,7 +120,6 @@ function FormModal({ isOpen, onClose, initialData }) {
                         {...register("username")}
                         icon={<FiAtSign />}
                         placeholder="Username"
-                        type="text"
                     />
                     {errors.username && (
                         <p className="text-red-500 text-sm -mt-3">
