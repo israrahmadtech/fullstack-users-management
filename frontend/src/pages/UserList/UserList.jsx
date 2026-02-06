@@ -1,95 +1,126 @@
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { FiUser, FiMail, FiAtSign, FiClock } from "react-icons/fi";
+import { useState, useMemo } from "react";
+import { FiUsers } from "react-icons/fi";
+import SearchBar from "../../components/SearchBar/SearchBar";
+import UserCard from "../../components/UserCard/UserCard";
+import FormModal from "../../components/FormModal/FormModal";
+import UserDetailsPanel from "../../components/UserDetailsPanel/UserDetailsPanel";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUsers, logout } from "../../../services/users.services";
+import { useNavigate } from "react-router-dom";
+import CurrentUserCard from "../../components/CurrentUserCard/CurrentUserCard";
 
-function CurrentUserCard() {
-    const [user, setUser] = useState(null);
+const UserList = () => {
+    const navigate = useNavigate()
+    let token = JSON.parse(localStorage.getItem("token"));
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editUser, setEditUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [search, setSearch] = useState("");
 
-        if (!token) return;
+    // Fetch Users Query
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["users"],
+        queryFn: () => fetchUsers(token),
+        enabled: !!token,
+    });
 
-        try {
-            const decoded = jwtDecode(token);
-            setUser(decoded);
-        } catch (error) {
-            console.log("Invalid token:", error.message);
-        }
-    }, []);
+    const users = data?.users || [];
+    const totalUsers = users.length;
 
-    const formatDate = (timestamp) => {
-        if (!timestamp) return "N/A";
-        return new Date(timestamp * 1000).toLocaleString();
-    };
-
-    if (!user) {
-        return (
-            <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full">
-                <h2 className="text-lg font-semibold text-gray-800">
-                    Current User
-                </h2>
-                <p className="text-gray-500 mt-2">No user logged in</p>
-            </div>
+    // Filter Users
+    const filteredUsers = useMemo(() => {
+        return users.filter((user) =>
+            `${user.name} ${user.email}`.toLowerCase().includes(search.toLowerCase())
         );
-    }
+    }, [users, search]);
+
+    // if no token error
+    if (!token) return <p className="text-center py-10 text-red-500">Token not found. Please login again.</p>
+
+    // loading
+    if (isLoading) return <p className="text-center py-10">Loading...</p>
+
+    // error
+    if (error) return <p className="text-center py-10 text-red-500">{error.message}</p>
 
     return (
-        <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
-                Current User
-            </h2>
+        <div className="container mx-auto px-4 py-8 space-y-8">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h2 className="whitespace-nowrap text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    <FiUsers className="flex-shrink-0 text-3xl" />
+                    <span className="whitespace-nowrap">Users Dashboard</span>
 
-            {/* Responsive Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
-
-                {/* Name */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiUser className="text-orange-500" />
-                    <span className="font-medium">Name:</span>
-                    <span className="truncate">{user?.name || "N/A"}</span>
-                </div>
-
-                {/* Email */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiMail className="text-orange-500" />
-                    <span className="font-medium">Email:</span>
-                    <span className="truncate">{user?.email || "N/A"}</span>
-                </div>
-
-                {/* Username */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiAtSign className="text-orange-500" />
-                    <span className="font-medium">Username:</span>
-                    <span className="truncate">
-                        {user?.username ? user.username : "Not Set"}
+                    <span className="ml-auto sm:ml-3 text-sm bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full font-medium flex-shrink-0">
+                        {filteredUsers.length} / {totalUsers}
                     </span>
-                </div>
+                </h2>
 
-                {/* User ID */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiUser className="text-orange-500" />
-                    <span className="font-medium">User ID:</span>
-                    <span className="truncate">{user?.id}</span>
-                </div>
+                {/* Search */}
+                <div className="flex items-center gap-3 max-w-xl w-full">
+                    <SearchBar value={search} onChange={setSearch} />
 
-                {/* Issued At */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiClock className="text-orange-500" />
-                    <span className="font-medium">Issued At:</span>
-                    <span className="truncate">{formatDate(user?.iat)}</span>
+                    <button
+                        className="cursor-pointer flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-lg font-medium transition-all shadow-sm hover:shadow-md active:scale-95"
+                        onClick={() => { logout(); navigate("/login", { replace: true }); }}
+                    >
+                        Logout
+                    </button>
                 </div>
-
-                {/* Expiry */}
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <FiClock className="text-orange-500" />
-                    <span className="font-medium">Expires At:</span>
-                    <span className="truncate">{formatDate(user?.exp)}</span>
-                </div>
-
             </div>
+
+            <CurrentUserCard/>
+
+            {/* Cards */}
+            {!users.length ? (
+                <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                    <p className="text-xl font-medium text-gray-700">No users found</p>
+                    <p className="mt-2 text-sm">No users available</p>
+                </div>
+            ) : filteredUsers.length === 0 ? (
+                <div className="text-center py-16 text-gray-500">
+                    <p className="text-lg font-medium">No matching users found</p>
+                    <p className="text-sm mt-1">Try searching with a different keyword</p>
+                </div>
+            ) : (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {filteredUsers.map((user) => (
+                        <UserCard
+                            key={"user-" + user._id}
+                            onClick={() => setSelectedUser(user)}
+                            setIsModalOpen={setIsModalOpen}
+                            setEditUser={setEditUser}
+                            user={user}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {/* User Details Panel */}
+            <UserDetailsPanel
+                user={selectedUser}
+                onClose={() => setSelectedUser(null)}
+                onEdit={() => {
+                    setEditUser(selectedUser);
+                    setIsModalOpen(true);
+                }}
+            />
+
+            {/* Form Modal (Only Update) */}
+            <FormModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditUser(null);
+                }}
+                initialData={editUser}
+                onUpdated={(updatedUser) => {
+                    setSelectedUser(updatedUser);   // 👈 user details panel update
+                }}
+            />
         </div>
     );
-}
+};
 
-export default CurrentUserCard;
+export default UserList;

@@ -18,7 +18,6 @@ function CurrentUserCard() {
         }
     }, []);
 
-    // Convert JWT timestamp into readable date
     const formatDate = (timestamp) => {
         if (!timestamp) return "N/A";
         return new Date(timestamp * 1000).toLocaleString();
@@ -26,7 +25,7 @@ function CurrentUserCard() {
 
     if (!user) {
         return (
-            <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full">
                 <h2 className="text-lg font-semibold text-gray-800">
                     Current User
                 </h2>
@@ -36,51 +35,58 @@ function CurrentUserCard() {
     }
 
     return (
-        <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+        <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 w-full">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">
                 Current User
             </h2>
 
-            <div className="space-y-3 text-gray-700 text-sm">
+            {/* Responsive Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 text-gray-700 text-sm">
 
                 {/* Name */}
-                <p className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiUser className="text-orange-500" />
-                    <span className="font-medium">Name:</span> {user?.name || "N/A"}
-                </p>
+                    <span className="font-medium">Name:</span>
+                    <span className="truncate">{user?.name || "N/A"}</span>
+                </div>
 
                 {/* Email */}
-                <p className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiMail className="text-orange-500" />
-                    <span className="font-medium">Email:</span> {user?.email || "N/A"}
-                </p>
+                    <span className="font-medium">Email:</span>
+                    <span className="truncate">{user?.email || "N/A"}</span>
+                </div>
 
                 {/* Username */}
-                <p className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiAtSign className="text-orange-500" />
-                    <span className="font-medium">Username:</span>{" "}
-                    {user?.username ? user.username : "Not Set"}
-                </p>
+                    <span className="font-medium">Username:</span>
+                    <span className="truncate">
+                        {user?.username ? user.username : "Not Set"}
+                    </span>
+                </div>
 
                 {/* User ID */}
-                <p className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiUser className="text-orange-500" />
-                    <span className="font-medium">User ID:</span> {user?.id}
-                </p>
+                    <span className="font-medium">User ID:</span>
+                    <span className="truncate">{user?.id}</span>
+                </div>
 
-                {/* Token Issued At */}
-                <p className="flex items-center gap-2">
+                {/* Issued At */}
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiClock className="text-orange-500" />
-                    <span className="font-medium">Issued At:</span>{" "}
-                    {formatDate(user?.iat)}
-                </p>
+                    <span className="font-medium">Issued At:</span>
+                    <span className="truncate">{formatDate(user?.iat)}</span>
+                </div>
 
-                {/* Token Expiry */}
-                <p className="flex items-center gap-2">
+                {/* Expiry */}
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <FiClock className="text-orange-500" />
-                    <span className="font-medium">Expires At:</span>{" "}
-                    {formatDate(user?.exp)}
-                </p>
+                    <span className="font-medium">Expires At:</span>
+                    <span className="truncate">{formatDate(user?.exp)}</span>
+                </div>
+
             </div>
         </div>
     );
