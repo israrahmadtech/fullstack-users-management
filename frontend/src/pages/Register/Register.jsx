@@ -35,7 +35,7 @@ function Register() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                     {/* Name */}
-                    <Input {...register("name")} icon={<FiUser />} placeholder="Full Name" />
+                    <Input {...register("name")} icon={<FiUser />} placeholder="Full Name" type="text" />
                     {errors.name && (
                         <p className="text-red-500 text-sm -mt-3">{errors.name.message}</p>
                     )}
@@ -53,7 +53,7 @@ function Register() {
                     )}
 
                     {/* Password */}
-                    <Input {...register("password")} icon={<FiLock />} placeholder="Password" />
+                    <Input {...register("password")} icon={<FiLock />} placeholder="Password" type="password" />
                     {errors.password && (
                         <p className="text-red-500 text-sm -mt-3">{errors.password.message}</p>
                     )}

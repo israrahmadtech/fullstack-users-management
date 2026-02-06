@@ -7,6 +7,7 @@ import UserDetailsPanel from "../../components/UserDetailsPanel/UserDetailsPanel
 import { useQuery } from "@tanstack/react-query";
 import { fetchUsers, logout } from "../../../services/users.services";
 import { useNavigate } from "react-router-dom";
+import CurrentUserCard from "../../components/CurrentUserCard/CurrentUserCard";
 
 const UserList = () => {
     const navigate = useNavigate()
@@ -68,6 +69,8 @@ const UserList = () => {
                     </button>
                 </div>
             </div>
+
+            <CurrentUserCard/>
 
             {/* Cards */}
             {!users.length ? (
