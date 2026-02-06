@@ -17,8 +17,8 @@ app.use(express.json())
 
 // cors
 app.use(cors({
-    // origin: "https://fullstack-users-management-frontend.vercel.app",
-    origin: "http://localhost:5173",
+    origin: "https://fullstack-users-management-frontend.vercel.app",
+    // origin: "http://localhost:5173",
     credentials: true
 }));
 
@@ -27,10 +27,10 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', authMiddleware, usersRoute)
 
 // test route
-// app.get("/", (req, res) => {
-//   res.json({ message: "Backend is running on Vercel 🚀" });
-// });
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running on Vercel 🚀" });
+});
 
-// export default app
+export default app
 
-app.listen(4000, () => console.log("Server up.."))
+// app.listen(4000, () => console.log("Server up.."))
