@@ -33,7 +33,7 @@ function Login() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                     {/* Email */}
-                    <Input {...register("identifier")} icon={<FiMail />} placeholder="Enter Email or Username" type="email" />
+                    <Input {...register("identifier")} icon={<FiMail />} placeholder="Enter Email or Username" />
                     {errors.identifier && (
                         <p className="text-red-500 text-sm -mt-3">{errors.identifier.message}</p>
                     )}
