@@ -1,6 +1,6 @@
 # 🧑‍💻 User Management Application (Full Stack)
 
-A complete **User Management System** built with **React + Redux Toolkit** on the frontend and **Express + MongoDB Atlas** on the backend.  
+A complete **User Management System** built with **React + Tanstack Query** on the frontend and **Express + MongoDB Atlas** on the backend.  
 This project supports full **CRUD operations**, **authentication**, **form validation**, and a clean modern UI.
 
 ---
@@ -94,3 +94,34 @@ This project supports full **CRUD operations**, **authentication**, **form valid
 | GET    | `/api/v1/users/:userId` | get user            |
 | PATCH  | `/api/v1/users/:userId` | update user         |
 | DELETE | `/api/v1/users/:userId` | delete user         |
+
+🔐 Authentication Flow
+
+User registers with required credentials
+Password is hashed using bcryptjs
+JWT token is generated after login
+Token is stored in localStorage
+Protected routes check token validity
+User can logout by clearing token
+
+🧪 Validation Rules
+Frontend Validation (Yup)
+Required fields check
+Email format validation
+Password strength validation
+Confirm password matching validation
+
+Backend Validation
+Mongoose schema validation
+Duplicate user checks
+Secure password hashing
+
+🤝 Contribution
+Feel free to fork this project and improve it. Pull requests are welcome.
+
+🧑‍💻 Author
+Israr Ahmad Tech
+Frontend React Developer | Full Stack MERN Developer
+
+⭐ Support
+If you like this project, please give it a ⭐ on GitHub!
