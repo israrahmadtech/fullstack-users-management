@@ -47,7 +47,6 @@ This project supports full **CRUD operations**, **authentication**, **form valid
 
 ### 🔹 Frontend Stack
 - React.js
-- Redux Toolkit
 - React Router DOM
 - React Hook Form
 - Yup Validation
