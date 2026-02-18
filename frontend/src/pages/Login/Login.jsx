@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../../schemas/schemas";
 import toast from "react-hot-toast";
-import { loginUser } from "../../../services/users.services";
+import { loginUser } from "../../../services/users.service";
 
 function Login() {
     const navigate = useNavigate()

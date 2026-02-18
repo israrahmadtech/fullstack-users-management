@@ -4,12 +4,12 @@ import User from "../models/User.mjs"
 export async function createUser(req, res) {
     try {
         // Get data from body
-        const { name, email, username, password } = req.body
+        const { name, email, username, password, image } = req.body
 
         // email or username checking
         if (!email && !username) return res.status(400).json({ isSuccess: false, message: 'Email or Username is required' }) // 400: bad request
         // name and password check
-        if (!name || !password) return res.status(400).json({ message: "All fields are required" })
+        if (!name || !password || !image) return res.status(400).json({ message: "All fields are required" })
 
         // Existing user checking
         const existingUser = await User.findOne({ $or: [{ email }, { username }] })
@@ -20,12 +20,12 @@ export async function createUser(req, res) {
         const hashedPass = await bcrypt.hash(password, 10)
 
         // validate new user using User schema and create user in mongo db
-        const user = await User.create({ name, email, username, password: hashedPass })
+        const user = await User.create({ name, email, username, password: hashedPass, image })
 
         // response
         res.status(201).json({
             message: "User successfully created",
-            user: { id: user._id, name: user.name, email: user.email, username: user.username }
+            user: { id: user._id, name: user.name, email: user.email, username: user.username, image: user.image }
         })
     }
     catch (error) {

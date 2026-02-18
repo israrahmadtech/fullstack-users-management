@@ -5,7 +5,7 @@ import UserCard from "../../components/UserCard/UserCard";
 import FormModal from "../../components/FormModal/FormModal";
 import UserDetailsPanel from "../../components/UserDetailsPanel/UserDetailsPanel";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUsers, logout } from "../../../services/users.services";
+import { fetchUsers, logout } from "../../../services/users.service";
 import { useNavigate } from "react-router-dom";
 import CurrentUserCard from "../../components/CurrentUserCard/CurrentUserCard";
 
