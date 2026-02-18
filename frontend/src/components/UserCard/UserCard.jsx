@@ -17,7 +17,10 @@ function UserCard({ user, setEditUser, onClick }) {
             {/* avatar + name */}
             <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center text-white shadow-md">
-                    <FiUser className="text-2xl" />
+                    {
+                        !user.image ? <FiUser className="text-2xl" /> :
+                        <img className="w-full h-full rounded-full object-cover" src={user.image} alt="" />
+                    }
                 </div>
 
                 <div className="flex-1 min-w-0">

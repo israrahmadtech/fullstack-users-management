@@ -2,7 +2,7 @@ import { FiX, FiMail, FiEdit, FiTrash2, FiAtSign, FiCalendar, } from "react-icon
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { deleteUser } from "../../../services/users.services";
+import { deleteUser } from "../../../services/users.service";
 
 const UserDetailsPanel = ({ user, onClose, onEdit }) => {
     if (!user) return null;
@@ -69,7 +69,10 @@ const UserDetailsPanel = ({ user, onClose, onEdit }) => {
                     {/* Avatar */}
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center text-white text-2xl font-bold">
-                            {user?.name?.charAt(0).toUpperCase()}
+                            {
+                                !user.image ? user?.name?.charAt(0).toUpperCase() :
+                                    <img className="w-full h-full rounded-full object-cover" src={user.image} alt="" />
+                            }
                         </div>
 
                         <div>

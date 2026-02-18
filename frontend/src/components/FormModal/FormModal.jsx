@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { updateUserSchema } from "../../schemas/schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { updateUser } from "../../../services/users.services";
+import { updateUser } from "../../../services/users.service";
 
 function FormModal({ isOpen, onClose, initialData, onUpdated }) {
     const queryClient = useQueryClient();

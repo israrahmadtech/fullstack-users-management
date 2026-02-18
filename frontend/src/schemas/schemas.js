@@ -14,7 +14,8 @@ export const registerSchema = object()
         email: string().trim().lowercase().email("Invalid email address").required("Email is required"),
         username: string().trim().lowercase().nullable(),
         password: string().required().min(6, "Minimum 6 characters").max(20, "Too long").matches(/[A-Z]/, "1 uppercase required").matches(/\d/, "1 number required"),
-        confirmPassword: string().oneOf([ref("password")], "Password must match").required("Confirm password is required")
+        confirmPassword: string().oneOf([ref("password")], "Password must match").required("Confirm password is required"),
+        image: string().required("Profile image is required").url("Invalid image URL"),
     })
 
 export const loginSchema = object({
