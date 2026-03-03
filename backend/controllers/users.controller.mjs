@@ -9,7 +9,7 @@ export async function getUsers(req, res) {
 
         if(cachedUsers){
             console.log("Cache Hit ✅")
-            return res.status(200).json({ isSuccess: true, message: "Users fetched successfully", totalUsers: JSON.parse(cachedUsers)})
+            return res.status(200).json(JSON.parse(cachedUsers))
         }
 
         console.log("Cache Miss ❌");
