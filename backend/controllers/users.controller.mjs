@@ -1,9 +1,24 @@
 import User from "../models/User.mjs";
+import redisClient from "../config/redis.mjs";
 
 export async function getUsers(req, res) {
     try {
+        // chack data in redis
+        const cacheKey = "users:all"
+        const cachedUsers = await redisClient.get(cacheKey)
+
+        if(cachedUsers){
+            console.log("Cache Hit ✅")
+            return res.status(200).json({ isSuccess: true, message: "Users fetched successfully", totalUsers: JSON.parse(cachedUsers)})
+        }
+
+        console.log("Cache Miss ❌");
+
         const users = await User.find().select("-password")
 
+        // save data in redis
+        await redisClient.setEx(cacheKey, 5, JSON.stringify(users))
+        // response
         res.status(200).json({ isSuccess: true, message: "Users fetched successfully", totalUsers: users.length, users })
     }
     catch (error) {
@@ -111,6 +126,9 @@ export async function updateUser(req, res) {
             { new: true }
         ).select("-password");
 
+        // clear redis data
+        await redisClient.del("users:all");
+
         return res.status(200).json({
             isSuccess: true,
             message: "User updated successfully!",
@@ -149,6 +167,9 @@ export async function deleteUser(req, res) {
         // delete user
         await User.findByIdAndDelete(userId);
 
+        // clear redis data
+        await redisClient.del("users:all");
+        
         return res.status(200).json({
             isSuccess: true,
             message: "User deleted successfully",
