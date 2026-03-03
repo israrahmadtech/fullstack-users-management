@@ -5,10 +5,12 @@ export async function getUsers(req, res) {
     try {
         // chack data in redis
         const cacheKey = "users:all"
-        const cachedUsers = await redisClient.get(cacheKey)
+        let cachedUsers = await redisClient.get(cacheKey)
+        console.log(cachedUsers);
 
         if(cachedUsers){
             console.log("Cache Hit ✅")
+            cachedUsers = JSON.parse(cachedUsers)
             return res.status(200).json({ isSuccess: true, message: "Users fetched successfully", totalUsers: cachedUsers.length, users: cachedUsers })
         }
 
