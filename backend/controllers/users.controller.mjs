@@ -17,7 +17,7 @@ export async function getUsers(req, res) {
         const users = await User.find().select("-password")
 
         // save data in redis
-        await redisClient.setEx(cacheKey, 5, JSON.stringify(users))
+        await redisClient.setEx(cacheKey, 50, JSON.stringify(users))
         // response
         res.status(200).json({ isSuccess: true, message: "Users fetched successfully", totalUsers: users.length, users })
     }
@@ -169,7 +169,7 @@ export async function deleteUser(req, res) {
 
         // clear redis data
         await redisClient.del("users:all");
-        
+
         return res.status(200).json({
             isSuccess: true,
             message: "User deleted successfully",

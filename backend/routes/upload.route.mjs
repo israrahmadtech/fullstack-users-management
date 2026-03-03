@@ -1,13 +1,9 @@
 import express from "express";
 import upload from "../cloudinary/multer.mjs";
+import { uploadImage } from "../controllers/upload.controller.mjs";
 
-const uploadRouter = express.Router()
+const uploadRouter = express.Router();
 
-uploadRouter.post("/image", upload.single("image"), (req, res) => {
-    res.json({
-        message: "Image upload successfully",
-        imageUrl: req.file.path
-    })
-})
+uploadRouter.post("/image", upload.single("image"), uploadImage);
 
-export default uploadRouter
+export default uploadRouter;
